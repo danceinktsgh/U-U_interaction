@@ -307,10 +307,10 @@ function uploadToGoogleSheet(payload) {
   // ⚠️ 填入您部署後取得的 GAS 網頁應用程式網址
   const gasUrl = '你的GAS部署網址'; 
   
-  if(!gasUrl || gasUrl === '你的GAS部署網址') {
+  if(!gasUrl || gasUrl === 'https://script.google.com/macros/s/AKfycbx4P9y-wx9wnjIjMxASW624m5_c1kBuxf6__SqJ30Ut_CFeec7CNw584XFE-9OUqOlI/exec') {
     $('uploadStatusBox').style.background = '#f59e0b';
     $('uploadStatusBox').style.color = '#fff';
-    $('uploadStatusBox').textContent = 'https://script.google.com/macros/s/AKfycbx4P9y-wx9wnjIjMxASW624m5_c1kBuxf6__SqJ30Ut_CFeec7CNw584XFE-9OUqOlI/exec';
+    $('uploadStatusBox').textContent = '⚠️ 尚未設定 GAS 串接網址，紀錄僅儲存於本機。';
     return;
   }
   
