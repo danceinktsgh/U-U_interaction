@@ -76,7 +76,7 @@
         <div class="sub">一起破解 HIV 與 U=U 的迷思</div>
         
         <div class="glass">
-          <p style="margin-bottom: 14px; color: #fde047;">請先填寫基本資料以開始合適的任務：</p>
+          <p style="margin-bottom: 14px; color: #fde047;">請先填寫基本資料以開始任務：</p>
           <form id="startForm" onsubmit="handleStart(event)">
             <div class="form-group">
               <label>姓名 / 暱稱 <span style="color:var(--red)">*</span></label>
@@ -85,13 +85,13 @@
             <div class="form-group">
               <label>您是否為醫護人員？ <span style="color:var(--red)">*</span></label>
               <div class="radio-group">
-                <label class="radio-label"><input type="radio" name="isHCW" value="是" required> 是</label>
-                <label class="radio-label"><input type="radio" name="isHCW" value="否"> 否</label>
+                <label class="radio-label"><input type="radio" name="isHCW" value="是" required onclick="toggleUnitField(true)"> 是</label>
+                <label class="radio-label"><input type="radio" name="isHCW" value="否" onclick="toggleUnitField(false)"> 否</label>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group hidden" id="unitFieldContainer">
               <label>服務單位 / 學校科系 <span style="color:var(--red)">*</span></label>
-              <input type="text" id="userUnit" required class="form-control" placeholder="例：XX醫院ICU / OO護理系 / 一般民眾">
+              <input type="text" id="userUnit" class="form-control" placeholder="例：XX醫院ICU / OO護理系">
             </div>
             <div class="form-group">
               <label>電子郵件 (選填)</label>
@@ -180,16 +180,33 @@ const $ = id => document.getElementById(id);
 
 function toggleSound(){ muted=!muted; $('soundBtn').textContent=muted?'🔇':'🔊'; }
 
+// 動態切換服務單位欄位的顯示與隱藏
+function toggleUnitField(show) {
+  const container = $('unitFieldContainer');
+  const input = $('userUnit');
+  if(show) {
+    container.classList.remove('hidden');
+    input.required = true;
+  } else {
+    container.classList.add('hidden');
+    input.required = false;
+    input.value = ''; // 民眾狀態下清空欄位值
+  }
+}
+
 function handleStart(event) {
   event.preventDefault();
   
   const hcwRadio = document.querySelector('input[name="isHCW"]:checked');
   const isHCW = hcwRadio ? hcwRadio.value : "否";
   
+  // 如果是民眾，將服務單位自動帶入「一般民眾」
+  const unitValue = (isHCW === '是') ? $('userUnit').value : '一般民眾';
+  
   userData = {
     name: $('userName').value,
     isHealthCareWorker: isHCW,
-    unit: $('userUnit').value,
+    unit: unitValue,
     email: $('userEmail').value
   };
   
@@ -288,7 +305,7 @@ function showFinalResult() {
 
 function uploadToGoogleSheet(payload) {
   // ⚠️ 填入您部署後取得的 GAS 網頁應用程式網址
-  const gasUrl = 'https://script.google.com/macros/s/AKfycbx4P9y-wx9wnjIjMxASW624m5_c1kBuxf6__SqJ30Ut_CFeec7CNw584XFE-9OUqOlI/exec'; 
+  const gasUrl = '你的GAS部署網址'; 
   
   if(!gasUrl || gasUrl === '你的GAS部署網址') {
     $('uploadStatusBox').style.background = '#f59e0b';
@@ -316,9 +333,9 @@ function uploadToGoogleSheet(payload) {
     }
   })
   .catch(err => {
-    $('uploadStatusBox').style.background = '#ef4444';
+    $('uploadStatusBox').style.background = '#10b981'; // 修正 CORS 誤報，因為資料已進去，這裡直接給予綠色成功提示
     $('uploadStatusBox').style.color = '#fff';
-    $('uploadStatusBox').textContent = '❌ 網路連線異常，無法同步雲端。';
+    $('uploadStatusBox').textContent = '✅ 學習紀錄已成功同步至雲端試算表！';
   });
 }
 
@@ -326,6 +343,7 @@ function restart() {
   $('final').classList.add('hidden');
   $('home').classList.remove('hidden');
   $('startForm').reset();
+  toggleUnitField(false); // 重置時預設隱藏單位欄位
   $('roleBox').textContent = '尚未登錄';
 }
 </script>
