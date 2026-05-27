@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>U=U 健康學堂｜測不到＝傳不出</title>
+  <style>
+    :root{
+      --red:#e11d48; --blue:#2563eb; --green:#22c55e; --yellow:#facc15;
+      --ink:#0f172a; --muted:#64748b; --white:#ffffff;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    body{
+      margin:0; min-height:100vh; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
+      background:#eaf5fb; color:#fff; display:flex; justify-content:center; align-items:stretch;
+    }
+    .phone{
+      width:100%; max-width:430px; min-height:100vh; background:#000; position:relative; overflow:hidden;
+      box-shadow:0 20px 60px rgba(15,23,42,.25);
+    }
+    @media (min-width:640px){.phone{min-height:860px;margin:28px 0;border-radius:34px}.screen{min-height:860px!important}}
+    .screen{
+      min-height:100vh; position:relative; background-size:cover; background-position:center; overflow:hidden;
+      transition:background-image .35s ease;
+    }
+    .screen::before{
+      content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,.74),rgba(0,0,0,.44) 40%,rgba(0,0,0,.70)); z-index:0;
+    }
+    .screen::after{
+      content:""; position:absolute; inset:0; z-index:0;
+      background:radial-gradient(circle at 50% 10%,rgba(255,255,255,.18),transparent 28%),radial-gradient(circle at 80% 80%,rgba(225,29,72,.25),transparent 30%);
+    }
+    .content{position:relative; z-index:2; min-height:100vh; padding:48px 18px 88px; display:flex; flex-direction:column}
+    .home-content{text-align:center; align-items:center}
+    .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);backdrop-filter:blur(12px);border-radius:999px;padding:9px 14px;font-size:14px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    h1{margin:0;text-shadow:0 4px 12px rgba(0,0,0,.55);letter-spacing:-.04em}
+    .home-title{font-size:52px;line-height:1.04;margin-top:70px;font-weight:1000}
+    .sub{font-size:18px;margin-top:12px;font-weight:800;text-shadow:0 3px 10px rgba(0,0,0,.55)}
+    .progress-track{width:100%;height:8px;background:rgba(255,255,255,.26);border-radius:999px;overflow:hidden;margin:24px auto 0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+    .progress-fill{height:100%;background:var(--yellow);border-radius:999px;transition:width .35s ease;box-shadow:0 0 18px rgba(250,204,21,.4)}
+    .glass{margin-top:72px;width:100%;border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.16);backdrop-filter:blur(12px);border-radius:28px;padding:22px 18px;box-shadow:0 20px 50px rgba(0,0,0,.28)}
+    .glass p{margin:0;font-size:18px;line-height:1.9;font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.25)}
+    .success{margin-top:28px;font-size:18px;font-weight:1000;text-shadow:0 3px 8px rgba(0,0,0,.55)}
+    .success span{color:#fde047}
+    .primary-btn{border:0;border-radius:24px;background:var(--blue);color:#fff;font-size:24px;font-weight:1000;padding:18px 42px;margin-top:22px;box-shadow:0 14px 32px rgba(37,99,235,.45);cursor:pointer}
+    button:active{transform:scale(.97)}
+    .game-head{text-align:center}.game-title{font-size:42px;font-weight:1000;line-height:1.1}.chapter-sub{margin-top:4px;font-size:16px;font-weight:800;color:rgba(255,255,255,.9);text-shadow:0 3px 8px rgba(0,0,0,.5)}
+    .quiz-wrap{flex:1;display:flex;flex-direction:column;justify-content:center;margin-top:22px}
+    .quiz-card{background:rgba(0,0,0,.18);backdrop-filter:blur(2px);border-radius:28px;padding:16px 14px 18px}
+    .status{display:flex;justify-content:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:900;color:rgba(255,255,255,.9)}
+    .status span{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.12);padding:6px 11px;border-radius:999px}
+    .question{min-height:104px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:27px;line-height:1.28;font-weight:1000;text-shadow:0 4px 12px rgba(0,0,0,.65);margin:0 0 28px}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{min-height:68px;border:0;border-radius:17px;background:#fff;color:#1f2937;font-size:15px;font-weight:1000;padding:13px 10px;box-shadow:0 12px 24px rgba(0,0,0,.25);cursor:pointer;line-height:1.35}.opt.correct{background:#22c55e;color:#fff}.opt.wrong{background:#ef4444;color:#fff}.opt.dim{background:rgba(255,255,255,.78);color:#64748b}
+    .feedback{margin-top:16px;background:rgba(255,255,255,.97);color:var(--ink);border-radius:24px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+    .fb-row{display:flex;gap:12px;align-items:flex-start}.fb-icon{font-size:26px}.fb-title{font-size:19px;font-weight:1000;margin:0}.fb-title.good{color:#16a34a}.fb-title.bad{color:#e11d48}.fb-text{margin:5px 0 0;font-size:14px;line-height:1.65;font-weight:700;color:#475569}.next-btn{width:100%;border:0;border-radius:18px;color:#fff;padding:16px;margin-top:14px;font-size:18px;font-weight:1000;box-shadow:0 12px 26px rgba(0,0,0,.25);cursor:pointer}
+    .bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(255,255,255,.16);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.12)}
+    .sound{width:46px;height:46px;border-radius:999px;border:0;background:rgba(0,0,0,.20);font-size:24px;color:#fff}.box{font-size:14px;font-weight:900;text-shadow:0 3px 8px rgba(0,0,0,.5);display:flex;gap:6px;align-items:center}.badges{letter-spacing:2px;max-width:160px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+    .modal{position:absolute;z-index:30;inset:0;background:rgba(0,0,0,.68);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:32px}.modal-card{width:100%;max-width:360px;background:#fff;color:var(--ink);border-radius:30px;padding:30px 28px;text-align:center;box-shadow:0 28px 70px rgba(0,0,0,.45)}.medal{font-size:60px}.modal h2{margin:8px 0 0;font-size:26px;font-weight:1000;color:#16a34a}.modal .earned{margin:12px 0 0;color:#64748b;font-size:17px;font-weight:800}.unlock{margin:16px 0 0;color:#d97706;font-weight:1000}.modal-btn{width:100%;border:0;border-radius:18px;background:#22c55e;color:white;padding:16px;margin-top:22px;font-size:19px;font-weight:1000;box-shadow:0 14px 28px rgba(34,197,94,.35)}.summary{margin-top:16px;text-align:left;background:#f8fafc;border-radius:18px;padding:16px;color:#475569;font-size:14px;line-height:1.7;font-weight:700}.summary b{color:#0f172a}.hidden{display:none!important}
+    .small-note{position:relative;z-index:2;color:rgba(255,255,255,.68);font-size:11px;text-align:center;margin-top:auto;line-height:1.5;padding:8px 8px 0}
+  </style>
+</head>
+<body>
+  <main class="phone">
+    <section id="screen" class="screen">
+      <div id="home" class="content home-content">
+        <div class="pill"><span>🧬</span><span>HIV 友善衛教任務</span></div>
+        <h1 class="home-title">U=U<br>健康學堂</h1>
+        <div class="sub">一起破解 HIV 與 U=U 的迷思</div>
+        <div class="progress-track"><div class="progress-fill" style="width:12%"></div></div>
+        <div class="glass">
+          <p>歡迎來到沉浸式 U=U 闖關學堂。完成 5 個任務，認識「病毒量測不到＝不會透過性行為傳染 HIV」的科學證據、治療追蹤、性健康與去污名觀念。</p>
+        </div>
+        <div class="success">全服累計成功次數：<span id="homeSuccess">0</span></div>
+        <button class="primary-btn" onclick="startGame()">立即入學</button>
+        <div class="small-note">本頁為衛教互動範例，不能取代個別醫療建議。治療與檢驗請依醫療團隊建議。</div>
+      </div>
+
+      <div id="game" class="content hidden">
+        <header class="game-head">
+          <h1 id="chapterTitle" class="game-title"></h1>
+          <div id="chapterSub" class="chapter-sub"></div>
+          <div class="progress-track"><div id="progress" class="progress-fill" style="width:8%"></div></div>
+        </header>
+        <div class="quiz-wrap">
+          <div class="quiz-card">
+            <div class="status"><span id="qStatus"></span><span id="scoreStatus"></span></div>
+            <h2 id="question" class="question"></h2>
+            <div id="options" class="options"></div>
+          </div>
+          <div id="feedback" class="feedback hidden">
+            <div class="fb-row"><div id="fbIcon" class="fb-icon"></div><div><p id="fbTitle" class="fb-title"></p><p id="fbText" class="fb-text"></p></div></div>
+            <button id="nextBtn" class="next-btn" onclick="nextQuestion()"></button>
+          </div>
+        </div>
+        <div class="small-note">U=U 指規則接受治療並持續維持病毒量測不到時，不會透過性行為傳染 HIV。</div>
+      </div>
+
+      <div class="bottom">
+        <button id="soundBtn" class="sound" onclick="toggleSound()">🔊</button>
+        <div class="box"><span>獎勵盒：</span><span id="badgeBox" class="badges">尚無勳章</span></div>
+      </div>
+
+      <div id="reward" class="modal hidden">
+        <div class="modal-card">
+          <div id="rewardMedal" class="medal"></div>
+          <h2 id="rewardTitle"></h2>
+          <p id="rewardEarned" class="earned"></p>
+          <p class="unlock">解鎖成功！</p>
+          <button id="rewardBtn" class="modal-btn" onclick="continueNext()">繼續下一區</button>
+        </div>
+      </div>
+
+            <!-- 修改後的通關與擴充表單畫面 -->
+      <div id="final" class="modal hidden">
+        <div class="modal-card" style="max-height: 90vh; overflow-y: auto; text-align: left;">
+          <div class="medal" style="text-align: center;">🎉</div>
+          <h2 style="text-align: center; margin-top: 10px;">恭喜完成任務！</h2>
+          <p class="earned" style="text-align: center;">您已成功通過 U=U 健康學堂</p>
+          
+          <div class="summary" style="background: #eff6ff; color: #1e40af; padding: 12px; border-radius: 12px; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+            <b>測不到＝傳不出。</b><br>
+            U=U 是科學證據，也是去除污名的開始。理解讓關係更安心，尊重讓照護更友善。
+          </div>
+
+          <!-- 資料收集表單區塊 -->
+          <div style="background: #f1f5f9; padding: 16px; border-radius: 18px; color: #0f172a;">
+            <h3 style="margin: 0 0 14px 0; font-size: 16px; color: #0f172a; font-weight: 800; border-bottom: 2px solid #cbd5e1; padding-bottom: 6px;">📝 填寫學習紀錄 / 簽到表</h3>
+            
+            <form id="quizFeedbackForm" onsubmit="submitForm(event)">
+              <!-- 姓名 -->
+              <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:13px; font-weight:800; color:#475569; margin-bottom:4px;">姓名 / 暱稱：<span style="color:#ef4444;">*</span></label>
+                <input type="text" id="userName" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-size:14px; background:#fff; color:#000;">
+              </div>
+              
+              <!-- 是否為醫護人員 (單選) -->
+              <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:13px; font-weight:800; color:#475569; margin-bottom:6px;">您是否為醫護人員？<span style="color:#ef4444;">*</span></label>
+                <div style="display: flex; gap: 20px; align-items: center; font-size: 14px;">
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                    <input type="radio" name="isHCW" value="是" required style="width:16px; height:16px;"> 是
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 4px; cursor: pointer;">
+                    <input type="radio" name="isHCW" value="否" style="width:16px; height:16px;"> 否
+                  </label>
+                </div>
+              </div>
+
+              <!-- 服務單位 -->
+              <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:13px; font-weight:800; color:#475569; margin-bottom:4px;">服務單位 / 學校科系：<span style="color:#ef4444;">*</span></label>
+                <input type="text" id="userUnit" placeholder="例：XX醫院ICU / OO大學護理系" required style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-size:14px; background:#fff; color:#000;">
+              </div>
+
+              <!-- 電子郵件 -->
+              <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:13px; font-weight:800; color:#475569; margin-bottom:4px;">電子郵件 (選填)：</label>
+                <input type="email" id="userEmail" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-size:14px; background:#fff; color:#000;">
+              </div>
+
+              <!-- 心得回饋 -->
+              <div style="margin-bottom: 12px;">
+                <label style="display:block; font-size:13px; font-weight:800; color:#475569; margin-bottom:4px;">這堂課對您的幫助或心得 (選填)：</label>
+                <textarea id="userFeedback" rows="3" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px; font-size:14px; resize: none; background:#fff; color:#000;"></textarea>
+              </div>
+
+              <!-- 隱藏欄位：自動帶入使用者的答對題數 -->
+              <input type="hidden" id="finalScore" name="finalScore">
+
+              <button type="submit" class="modal-btn" style="margin-top: 10px; background: #2563eb; width: 100%; border: none; color: #fff; padding: 12px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer;">提交學習紀錄</button>
+            </form>
+          </div>
+
+          <button class="modal-btn" style="background:#64748b; margin-top: 12px; width: 100%; border: none; color: #fff; padding: 12px; border-radius: 12px; font-size: 16px; cursor: pointer;" onclick="restart()">重新挑戰</button>
+        </div>
+      </div>
+    </section>
+  </main>
+<script>
+const chapters = [
+ {title:'U=U 入門室',sub:'關卡 1 / 5',badge:'科學理解勳章',medal:'🏅',accent:'#e11d48',bg:'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=1200&q=80)', qs:[
+  ['U=U 是什麼意思？',['Unknown = Unsafe','Undetectable = Untransmittable','Untreated = Uninfectious','Universal = Unique'],1,'U=U 是 Undetectable = Untransmittable，中文常說「測不到＝傳不出」。'],
+  ['「病毒量測不到」最接近哪個意思？',['HIV 已經完全消失','血液中的病毒量低到檢驗測不到或非常低','不需要再回診','不需要再服藥'],1,'測不到代表治療把病毒量控制得很低，不等於完全治癒，也不代表可以自行停藥。'],
+  ['U=U 主要說明哪一種傳播情境？',['性行為傳播','空氣傳播','共用餐具','蚊子叮咬'],0,'U=U 的核心是：穩定治療並維持病毒量測不到時，不會透過性行為傳染 HIV。'],
+  ['U=U 的重要前提是什麼？',['只要吃過一次藥','規則治療並定期追蹤病毒量','沒有症狀就可以','不用抽血也能判斷'],1,'規則服用抗病毒藥物、持續回診與病毒量追蹤，是維持 U=U 的關鍵。'],
+  ['哪一句最適合作為 U=U 衛教標語？',['HIV 無法治療','測不到＝傳不出','HIV 一定會傳染','不用治療也沒關係'],1,'「測不到＝傳不出」簡潔傳達科學證據，也能降低不必要的恐懼與污名。']]
+ },
+ {title:'穩定治療室',sub:'關卡 2 / 5',badge:'穩定治療勳章',medal:'🎖️',accent:'#0ea5e9',bg:'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=1200&q=80)', qs:[
+  ['讓 HIV 病毒量下降的主要方式是什麼？',['規則服用抗病毒藥物 ART','只靠多喝水','只靠運動','完全不需要治療'],0,'抗病毒治療 ART 可以有效控制病毒量，幫助維持健康並預防性傳播。'],
+  ['病毒量測不到後，仍然需要做什麼？',['自行停藥','定期回診追蹤','改吃保健食品即可','不再抽血'],1,'測不到是治療成果，仍需要持續服藥與追蹤，才能維持穩定。'],
+  ['如果常常漏藥，最可能造成什麼問題？',['病毒量可能回升','完全不會影響','一定馬上治癒','從此不用回診'],0,'漏藥可能影響病毒控制，也可能增加抗藥性風險，建議與醫療團隊討論。'],
+  ['U=U 不代表什麼？',['治療有效時可避免性傳播','HIV 已經完全從身體消失','規則治療很重要','病毒量追蹤很重要'],1,'U=U 不等於治癒；它代表在有效治療並維持病毒量測不到時，性傳播風險為零。'],
+  ['對藥物副作用或漏藥有疑問，最好怎麼做？',['自行停藥','問網友就好','與醫療團隊討論','上網買替代藥'],2,'遇到副作用、忘記服藥或治療困難，請先與醫療團隊討論，不要自行停藥。']]
+ },
+ {title:'迷思破解室',sub:'關卡 3 / 5',badge:'迷思破解勳章',medal:'🛡️',accent:'#f59e0b',bg:'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80)', qs:[
+  ['HIV 會因為一起吃飯而傳染嗎？',['會','不會','只要同桌就會','只要聊天就會'],1,'HIV 不會透過共餐、共用餐具、握手、擁抱或日常社交接觸傳染。'],
+  ['HIV 會因為擁抱或握手而傳染嗎？',['不會','一定會','流汗就會','夏天比較會'],0,'擁抱、握手、共同工作、共同上課都不會傳染 HIV。'],
+  ['蚊子叮咬會傳染 HIV 嗎？',['會','不會','只在晚上會','只在醫院會'],1,'蚊子叮咬不會傳染 HIV。這是常見但錯誤的迷思。'],
+  ['哪一個觀念比較正確？',['HIV 感染者都很危險','HIV 可以透過治療控制','HIV 不能治療','外觀看起來健康就不用篩檢'],1,'HIV 是可以治療與控制的慢性疾病。治療穩定時，生活、工作與親密關係都能更安心。'],
+  ['對 HIV 感染者較友善的態度是？',['避免所有接觸','公開他的病情','尊重隱私、支持治療','要求離開工作場所'],2,'尊重隱私、避免標籤化、支持持續治療，是友善照護與社會支持的基礎。']]
+ },
+ {title:'性健康防護室',sub:'關卡 4 / 5',badge:'安心關係勳章',medal:'💞',accent:'#a855f7',bg:'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80)', qs:[
+  ['U=U 對哪件事最有幫助？',['降低 HIV 性傳播風險至零','預防所有性病','取代所有醫療追蹤','讓人不用治療'],0,'U=U 指的是穩定測不到時，不會透過性行為傳染 HIV；但不等於預防所有性病。'],
+  ['U=U 可以預防梅毒、淋病、披衣菌等其他性病嗎？',['可以完全預防','不可以','一定會增加感染','與性健康無關'],1,'U=U 是 HIV 傳播的概念，不會預防其他性傳染病，仍可依需要使用保險套與定期篩檢。'],
+  ['PrEP 是什麼？',['暴露前預防性投藥','抗生素','疫苗','止痛藥'],0,'PrEP 是暴露前預防性投藥，適合部分 HIV 陰性且有感染風險的人與醫師討論使用。'],
+  ['PEP 通常是在什麼情境使用？',['可能暴露 HIV 後的緊急預防','每天補充維他命','治療感冒','降血壓'],0,'PEP 是疑似暴露後的緊急預防，應盡快就醫評估，越早開始越好。'],
+  ['比較完整的性健康策略包含什麼？',['U=U、保險套、PrEP/PEP、定期 STI 篩檢與溝通','只靠外表判斷','不用篩檢','只相信偏方'],0,'性健康不只是一個方法，而是依照情境選擇 U=U、保險套、PrEP/PEP、篩檢與溝通。']]
+ },
+ {title:'去污名支持室',sub:'關卡 5 / 5',badge:'友善支持勳章',medal:'🌈',accent:'#22c55e',bg:'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1200&q=80)', qs:[
+  ['哪一句比較適合作為友善衛教文字？',['愛滋病人很危險','HIV 感染者可以透過治療健康生活','感染 HIV 就沒有未來','應該公開感染者身分'],1,'友善衛教應強調治療、支持與尊重，而不是恐嚇或標籤。'],
+  ['朋友告知 HIV 感染狀態時，第一步較適合？',['尊重、傾聽、保密','立刻轉傳給別人','避免所有接觸','責備對方'],0,'HIV 狀態是個人隱私。尊重、傾聽與保密，是支持的第一步。'],
+  ['U=U 對去污名有什麼意義？',['幫助理解治療有效，降低不必要恐懼','讓大家不用了解 HIV','讓感染者不需要醫療','讓人可以忽略性健康'],0,'U=U 讓社會看見：正確治療能讓人健康生活，也能讓親密關係更安心。'],
+  ['醫療場域中，哪一種做法較友善？',['保護隱私、使用中性尊重語言','大聲討論個案病情','用標籤稱呼病人','拒絕照護'],0,'醫療照護應保護隱私、避免歧視，並使用尊重且精準的語言。'],
+  ['完成 U=U 學習後，最重要的行動是什麼？',['傳遞正確知識，減少恐懼與歧視','製造謠言','避免篩檢','認為治療不重要'],0,'理解 U=U，是科學衛教，也是去污名與友善照護的開始。']]
+ }
+];
+let screen='home', chapterIndex=0, qIndex=0, selected=null, score=0, badges=[], muted=false;
+const totalQs = chapters.reduce((s,c)=>s+c.qs.length,0);
+const $ = id => document.getElementById(id);
+function setBg(){ $('screen').style.backgroundImage = screen==='home' ? 'linear-gradient(rgba(0,0,0,.1),rgba(0,0,0,.1)), url(https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80)' : chapters[chapterIndex].bg; }
+function startGame(){screen='game'; $('home').classList.add('hidden'); $('game').classList.remove('hidden'); function submitForm(event) {
+  event.preventDefault(); // 防止網頁重新整理
+  
+  // 顯示傳送中狀態，避免使用者重複點擊
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "資料同步中，請稍候...";
+  
+  // 自動將闖關分數帶入隱藏欄位
+  $('finalScore').value = score;
+  
+  // 抓取單選鈕（是否為醫護人員）的值
+  const hcwRadio = document.querySelector('input[name="isHCW"]:checked');
+  const isHCW = hcwRadio ? hcwRadio.value : "未填";
+  
+  // 整理所有表單欄位資料
+  const formData = {
+    name: $('userName').value,
+    isHealthCareWorker: isHCW,
+    unit: $('userUnit').value,
+    email: $('userEmail').value,
+    feedback: $('userFeedback').value,
+    score: score
+  };
+  
+  // 填入您部署後取得的 GAS 網頁應用程式網址
+  const gasUrl = '你的GAS部署網址'; 
+  
+  // 利用 fetch 發送 POST 請求至 GAS
+  fetch(gasUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.result === 'success') {
+      // 提交後將表單替換為感謝訊息
+      $('quizFeedbackForm').innerHTML = `
+        <div style='color:#16a34a; font-weight:bold; text-align:center; margin:20px 0; font-size:16px;'>
+          🎉 學習紀錄已成功同步！<br>
+          感謝 ${formData.name} (${formData.unit})<br>
+          共同為 HIV 友善醫療環境做出努力。
+        </div>`;
+    } else {
+      alert('系統寫入失敗，請稍後再試：' + data.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('連線異常，請檢查網路連線後重新提交。');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  });
+}
+
+setBg(); render();}
+function toggleSound(){muted=!muted; $('soundBtn').textContent=muted?'🔇':'🔊';}
+function updateBox(){ $('badgeBox').textContent = badges.length ? badges.join(' ') : '尚無勳章'; $('homeSuccess').textContent=score; }
+function render(){
+ const ch=chapters[chapterIndex], q=ch.qs[qIndex]; selected=null; $('feedback').classList.add('hidden'); $('chapterTitle').textContent=ch.title; $('chapterSub').textContent=ch.sub; $('qStatus').textContent=`第 ${qIndex+1} 題 / 5`; $('scoreStatus').textContent=`答對累計 ${score}`; $('question').textContent=q[0];
+ const answered = chapters.slice(0,chapterIndex).reduce((s,c)=>s+c.qs.length,0)+qIndex; $('progress').style.width = Math.max(8,Math.round(answered/totalQs*100))+'%';
+ const opts=$('options'); opts.innerHTML=''; q[1].forEach((text,i)=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=text; b.onclick=()=>choose(i); opts.appendChild(b); }); updateBox();
+}
+function choose(i){ if(selected!==null)return; selected=i; const ch=chapters[chapterIndex], q=ch.qs[qIndex], buttons=[...document.querySelectorAll('.opt')]; buttons.forEach((b,idx)=>{ if(idx===q[2]) b.classList.add('correct'); else if(idx===i) b.classList.add('wrong'); else b.classList.add('dim'); });
+ const good=i===q[2]; if(good)score++; $('fbIcon').textContent=good?'✅':'💡'; $('fbTitle').textContent=good?'答對了！':'再想一下，正確觀念是：'; $('fbTitle').className='fb-title '+(good?'good':'bad'); $('fbText').textContent=q[3]; $('nextBtn').style.backgroundColor=ch.accent; $('nextBtn').textContent=qIndex<ch.qs.length-1?'下一題':'完成本區'; $('feedback').classList.remove('hidden'); updateBox(); }
+function nextQuestion(){ if(selected===null)return; const ch=chapters[chapterIndex]; if(qIndex<ch.qs.length-1){qIndex++; render();} else { if(!badges.includes(ch.medal))badges.push(ch.medal); updateBox(); showReward(); } }
+function showReward(){ const ch=chapters[chapterIndex]; $('rewardMedal').textContent=ch.medal; $('rewardTitle').textContent='突破！'+ch.title; $('rewardEarned').textContent='您獲得了：'+ch.badge; $('reward').classList.remove('hidden'); }
+function continueNext(){ $('reward').classList.add('hidden'); if(chapterIndex<chapters.length-1){chapterIndex++; qIndex=0; function submitForm(event) {
+  event.preventDefault(); // 防止網頁重新整理
+  
+  // 顯示傳送中狀態，避免使用者重複點擊
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "資料同步中，請稍候...";
+  
+  // 自動將闖關分數帶入隱藏欄位
+  $('finalScore').value = score;
+  
+  // 抓取單選鈕（是否為醫護人員）的值
+  const hcwRadio = document.querySelector('input[name="isHCW"]:checked');
+  const isHCW = hcwRadio ? hcwRadio.value : "未填";
+  
+  // 整理所有表單欄位資料
+  const formData = {
+    name: $('userName').value,
+    isHealthCareWorker: isHCW,
+    unit: $('userUnit').value,
+    email: $('userEmail').value,
+    feedback: $('userFeedback').value,
+    score: score
+  };
+  
+  // 填入您部署後取得的 GAS 網頁應用程式網址
+  const gasUrl = '你的GAS部署網址'; 
+  
+  // 利用 fetch 發送 POST 請求至 GAS
+  fetch(gasUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.result === 'success') {
+      // 提交後將表單替換為感謝訊息
+      $('quizFeedbackForm').innerHTML = `
+        <div style='color:#16a34a; font-weight:bold; text-align:center; margin:20px 0; font-size:16px;'>
+          🎉 學習紀錄已成功同步！<br>
+          感謝 ${formData.name} (${formData.unit})<br>
+          共同為 HIV 友善醫療環境做出努力。
+        </div>`;
+    } else {
+      alert('系統寫入失敗，請稍後再試：' + data.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('連線異常，請檢查網路連線後重新提交。');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  });
+}
+
+setBg(); render();} else {$('final').classList.remove('hidden');}}
+function restart(){ screen='home'; chapterIndex=0; qIndex=0; selected=null; score=0; badges=[]; $('final').classList.add('hidden'); $('game').classList.add('hidden'); $('home').classList.remove('hidden'); updateBox(); function submitForm(event) {
+  event.preventDefault(); // 防止網頁重新整理
+  
+  // 顯示傳送中狀態，避免使用者重複點擊
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "資料同步中，請稍候...";
+  
+  // 自動將闖關分數帶入隱藏欄位
+  $('finalScore').value = score;
+  
+  // 抓取單選鈕（是否為醫護人員）的值
+  const hcwRadio = document.querySelector('input[name="isHCW"]:checked');
+  const isHCW = hcwRadio ? hcwRadio.value : "未填";
+  
+  // 整理所有表單欄位資料
+  const formData = {
+    name: $('userName').value,
+    isHealthCareWorker: isHCW,
+    unit: $('userUnit').value,
+    email: $('userEmail').value,
+    feedback: $('userFeedback').value,
+    score: score
+  };
+  
+  // 填入您部署後取得的 GAS 網頁應用程式網址
+  const gasUrl = 'https://script.google.com/macros/s/AKfycbx4P9y-wx9wnjIjMxASW624m5_c1kBuxf6__SqJ30Ut_CFeec7CNw584XFE-9OUqOlI/exec'; 
+  
+  // 利用 fetch 發送 POST 請求至 GAS
+  fetch(gasUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.result === 'success') {
+      // 提交後將表單替換為感謝訊息
+      $('quizFeedbackForm').innerHTML = `
+        <div style='color:#16a34a; font-weight:bold; text-align:center; margin:20px 0; font-size:16px;'>
+          🎉 學習紀錄已成功同步！<br>
+          感謝 ${formData.name} (${formData.unit})<br>
+          共同為 HIV 友善醫療環境做出努力。
+        </div>`;
+    } else {
+      alert('系統寫入失敗，請稍後再試：' + data.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('連線異常，請檢查網路連線後重新提交。');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  });
+}
+
+setBg(); }
+function submitForm(event) {
+  event.preventDefault(); // 防止網頁重新整理
+  
+  // 顯示傳送中狀態，避免使用者重複點擊
+  const submitBtn = event.target.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = "資料同步中，請稍候...";
+  
+  // 自動將闖關分數帶入隱藏欄位
+  $('finalScore').value = score;
+  
+  // 抓取單選鈕（是否為醫護人員）的值
+  const hcwRadio = document.querySelector('input[name="isHCW"]:checked');
+  const isHCW = hcwRadio ? hcwRadio.value : "未填";
+  
+  // 整理所有表單欄位資料
+  const formData = {
+    name: $('userName').value,
+    isHealthCareWorker: isHCW,
+    unit: $('userUnit').value,
+    email: $('userEmail').value,
+    feedback: $('userFeedback').value,
+    score: score
+  };
+  
+  // 填入您部署後取得的 GAS 網頁應用程式網址
+  const gasUrl = '你的GAS部署網址'; 
+  
+  // 利用 fetch 發送 POST 請求至 GAS
+  fetch(gasUrl, {
+    method: 'POST',
+    mode: 'cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.result === 'success') {
+      // 提交後將表單替換為感謝訊息
+      $('quizFeedbackForm').innerHTML = `
+        <div style='color:#16a34a; font-weight:bold; text-align:center; margin:20px 0; font-size:16px;'>
+          🎉 學習紀錄已成功同步！<br>
+          感謝 ${formData.name} (${formData.unit})<br>
+          共同為 HIV 友善醫療環境做出努力。
+        </div>`;
+    } else {
+      alert('系統寫入失敗，請稍後再試：' + data.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('連線異常，請檢查網路連線後重新提交。');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  });
+}
+
+setBg(); updateBox();
+</script>
+</body>
+</html>
