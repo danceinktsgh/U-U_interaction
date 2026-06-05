@@ -47,8 +47,8 @@
     .quiz-card{background:rgba(0,0,0,.18);backdrop-filter:blur(2px);border-radius:28px;padding:16px 14px 18px}
     .status{display:flex;justify-content:center;gap:8px;margin-bottom:18px;font-size:13px;font-weight:900;color:rgba(255,255,255,.9)}
     .status span{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.12);padding:6px 11px;border-radius:999px}
-    .question{min-height:104px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:25px;line-height:1.28;font-weight:1000;text-shadow:0 4px 12px rgba(0,0,0,.65);margin:0 0 28px}
-    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{min-height:68px;border:0;border-radius:17px;background:#fff;color:#1f2937;font-size:15px;font-weight:1000;padding:13px 10px;box-shadow:0 12px 24px rgba(0,0,0,.25);cursor:pointer;line-height:1.35}.opt.correct{background:#22c55e;color:#fff}.opt.wrong{background:#ef4444;color:#fff}.opt.dim{background:rgba(255,255,255,.78);color:#64748b}
+    .question{min-height:118px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:24px;line-height:1.32;font-weight:1000;text-shadow:0 4px 12px rgba(0,0,0,.65);margin:0 0 28px;white-space:pre-line}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{min-height:82px;border:0;border-radius:17px;background:#fff;color:#1f2937;font-size:14px;font-weight:1000;padding:13px 10px;box-shadow:0 12px 24px rgba(0,0,0,.25);cursor:pointer;line-height:1.38;white-space:pre-line}.opt.correct{background:#22c55e;color:#fff}.opt.wrong{background:#ef4444;color:#fff}.opt.dim{background:rgba(255,255,255,.78);color:#64748b}
     .feedback{margin-top:16px;background:rgba(255,255,255,.97);color:var(--ink);border-radius:24px;padding:16px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
     .fb-row{display:flex;gap:12px;align-items:flex-start}.fb-icon{font-size:26px}.fb-title{font-size:19px;font-weight:1000;margin:0}.fb-title.good{color:#16a34a}.fb-title.bad{color:#e11d48}.fb-text{margin:5px 0 0;font-size:14px;line-height:1.65;font-weight:700;color:#475569}.next-btn{width:100%;border:0;border-radius:18px;color:#fff;padding:16px;margin-top:14px;font-size:18px;font-weight:1000;box-shadow:0 12px 26px rgba(0,0,0,.25);cursor:pointer}
     .bottom{position:absolute;z-index:10;left:0;right:0;bottom:0;height:66px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(255,255,255,.16);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.12)}
@@ -133,6 +133,7 @@
           <div class="medal" style="text-align: center;">🎉</div>
           <h2 style="text-align: center;">任務完成！</h2>
           <p class="earned" style="text-align: center;" id="finalScoreText"></p>
+          <p class="earned" style="text-align: center; color:#0f172a;" id="finalTimeText"></p>
           <div class="summary"><b>測不到＝傳不出。</b><br>U=U 是科學證據，也是去除污名的開始。理解讓關係更安心，尊重讓照護更友善。</div>
           
           <div id="uploadStatusBox" style="margin-top:16px; padding:12px; border-radius:12px; text-align:center; font-weight:800; font-size:14px;">
@@ -148,7 +149,7 @@
 <script>
 // 民眾題庫（精選 5 題）
 const publicQs = [
-  ['U=U 是什麼意思？',['Unknown = Unsafe','Undetectable = Untransmittable','Untreated = Uninfectious','Universal = Unique'],1,'U=U 是 Undetectable = Untransmittable，中文常說「測不到＝傳不出」。'],
+  ['U=U 是什麼意思？\nWhat does U=U mean?',['Unknown = Unsafe\n未知＝不安全','Undetectable = Untransmittable\n測不到＝傳不出','Untreated = Uninfectious\n未治療＝不會傳染','Universal = Unique\n通用＝獨特'],1,'U=U 是 Undetectable = Untransmittable；中文常說「測不到＝傳不出」。也就是規則治療並維持病毒量測不到時，不會透過性行為傳染 HIV。'],
   ['HIV 會因為一起吃飯或共用餐具而傳染嗎？',['會','不會','只要同桌就會','只要聊天就會'],1,'HIV 不會透過共餐、共用餐具、握手、擁抱或日常社交接觸傳染。'],
   ['蚊子叮咬會傳染 HIV 嗎？',['會','不會','只在晚上會','只在醫院會'],1,'蚊子叮咬不會傳染 HIV。這是常見但錯誤的迷思。'],
   ['「病毒量測不到」最接近哪個意思？',['HIV 已經完全消失','血液中的病毒量低到檢驗測不到或非常低','不需要再回診','不需要再服藥'],1,'測不到代表治療把病毒量控制得很低，不等於完全治癒，也不代表可以自行停藥。'],
@@ -157,7 +158,7 @@ const publicQs = [
 
 // 醫護題庫（精選 10 題）
 const hcwQs = [
-  ['U=U 是什麼意思？',['Unknown = Unsafe','Undetectable = Untransmittable','Untreated = Uninfectious','Universal = Unique'],1,'U=U 是 Undetectable = Untransmittable，中文常說「測不到＝傳不出」。'],
+  ['U=U 是什麼意思？\nWhat does U=U mean?',['Unknown = Unsafe\n未知＝不安全','Undetectable = Untransmittable\n測不到＝傳不出','Untreated = Uninfectious\n未治療＝不會傳染','Universal = Unique\n通用＝獨特'],1,'U=U 是 Undetectable = Untransmittable；中文常說「測不到＝傳不出」。也就是規則治療並維持病毒量測不到時，不會透過性行為傳染 HIV。'],
   ['「病毒量測不到」最接近哪個意思？',['HIV 已經完全消失','血液中的病毒量低到檢驗測不到或非常低','不需要再回診','不需要再服藥'],1,'測不到代表治療把病毒量控制得很低，不等於完全治癒，也不代表可以自行停藥。'],
   ['U=U 的重要前提是什麼？',['只要吃過一次藥','規則治療並定期追蹤病毒量','沒有症狀就可以','不用抽血也能判斷'],1,'規則服用抗病毒藥物、持續回診與病毒量追蹤，是維持 U=U 的關鍵。'],
   ['如果常常漏藥，最可能造成什麼問題？',['病毒量可能回升','完全不會影響','一定馬上治癒','從此不用回診'],0,'漏藥可能影響病毒控制，也可能增加抗藥性風險，建議與醫療團隊討論。'],
@@ -175,10 +176,21 @@ let selected = null;
 let score = 0;
 let muted = false;
 let userData = {};
+let challengeStartTime = null;
+let challengeEndTime = null;
+let completionSeconds = 0;
+let completionTimeText = '';
 
 const $ = id => document.getElementById(id);
 
 function toggleSound(){ muted=!muted; $('soundBtn').textContent=muted?'🔇':'🔊'; }
+
+function formatDuration(totalSeconds) {
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+  return `${mins}分${String(secs).padStart(2, '0')}秒`;
+}
+
 
 // 動態切換服務單位欄位的顯示與隱藏
 function toggleUnitField(show) {
@@ -337,6 +349,10 @@ function restart() {
   $('startForm').reset();
   toggleUnitField(false); // 重置時預設隱藏單位欄位
   $('roleBox').textContent = '尚未登錄';
+  challengeStartTime = null;
+  challengeEndTime = null;
+  completionSeconds = 0;
+  completionTimeText = '';
 }
 </script>
 </body>
