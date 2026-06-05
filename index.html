@@ -112,7 +112,7 @@
         </header>
         <div class="quiz-wrap">
           <div class="quiz-card">
-            <div class="status"><span id="qStatus"></span><span id="scoreStatus"></span></div>
+            <div class="status"><span id="qStatus"></span><span id="scoreStatus"></span><span id="timerStatus">時間：0分00秒</span></div>
             <h2 id="question" class="question"></h2>
             <div id="options" class="options"></div>
           </div>
@@ -181,6 +181,7 @@ let challengeStartTime = null;
 let challengeEndTime = null;
 let completionSeconds = 0;
 let completionTimeText = '';
+let timerInterval = null;
 
 const $ = id => document.getElementById(id);
 
@@ -206,6 +207,32 @@ function formatDuration(totalSeconds) {
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
   return `${mins}分${String(secs).padStart(2, '0')}秒`;
+}
+
+function updateTimerDisplay() {
+  if (!challengeStartTime || !$('timerStatus')) return;
+  const now = new Date();
+  const elapsedSeconds = Math.max(0, Math.floor((now - challengeStartTime) / 1000));
+  $('timerStatus').textContent = `時間：${formatDuration(elapsedSeconds)}`;
+}
+
+function startTimer() {
+  challengeStartTime = new Date();
+  challengeEndTime = null;
+  completionSeconds = 0;
+  completionTimeText = '';
+  if (timerInterval) clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(updateTimerDisplay, 1000);
+}
+
+function stopTimer() {
+  challengeEndTime = new Date();
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  completionSeconds = challengeStartTime ? Math.max(0, Math.round((challengeEndTime - challengeStartTime) / 1000)) : 0;
+  completionTimeText = formatDuration(completionSeconds);
+  updateTimerDisplay();
 }
 
 
@@ -254,6 +281,8 @@ function handleStart(event) {
   qIndex = 0;
   score = 0;
   
+  
+  startTimer();
   $('home').classList.add('hidden');
   $('game').classList.remove('hidden');
   renderQuestion();
@@ -320,9 +349,7 @@ function nextQuestion() {
 }
 
 function showFinalResult() {
-  challengeEndTime = new Date();
-  completionSeconds = challengeStartTime ? Math.round((challengeEndTime - challengeStartTime) / 1000) : 0;
-  completionTimeText = formatDuration(completionSeconds);
+  stopTimer();
 
   $('game').classList.add('hidden');
   $('final').classList.remove('hidden');
@@ -377,10 +404,13 @@ function restart() {
   $('startForm').reset();
   toggleUnitField(false); // 重置時預設隱藏單位欄位
   $('roleBox').textContent = '尚未登錄';
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
   challengeStartTime = null;
   challengeEndTime = null;
   completionSeconds = 0;
   completionTimeText = '';
+  if ($('timerStatus')) $('timerStatus').textContent = '時間：0分00秒';
   setBackground('home');
 }
 </script>
