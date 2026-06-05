@@ -361,13 +361,13 @@ function uploadToGoogleSheet(payload) {
     // 只要有回應，不論內容，都代表觸發成功
     $('uploadStatusBox').style.background = '#10b981';
     $('uploadStatusBox').style.color = '#fff';
-    $('uploadStatusBox').textContent = '✅ 學習紀錄已成功同步至雲端試算表！';
+    $('uploadStatusBox').textContent = '✅ 學習紀錄已成功同步上傳！';
   })
   .catch(err => {
     // 即使因為 CORS 跑進 catch，因為實際資料已被 Google 接收，這裡同樣給予綠色成功提示
     $('uploadStatusBox').style.background = '#10b981';
     $('uploadStatusBox').style.color = '#fff';
-    $('uploadStatusBox').textContent = '✅ 學習紀錄已成功同步至雲端試算表！';
+    $('uploadStatusBox').textContent = '✅ 學習紀錄已成功同步上傳！';
   });
 }
 
